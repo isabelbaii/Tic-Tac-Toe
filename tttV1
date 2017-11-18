@@ -1,0 +1,71 @@
+public class tttV1{
+  public static void main(String[] args){
+    String[][] board = new String [3][3];
+
+    for (int i=0; i<3; i++) {
+      for (int j=0; j<3; j++){
+        board[i][j] = "-";
+      }
+    }
+
+    for (int i=0;i<3;i++) {
+      for (int j=0; j<3; j++){
+        TextIO.put(" "+board[i][j]);
+      }
+      TextIO.putf("%n");
+    }
+    check();
+  }
+
+  public static void check(){
+    int count = 0;
+    boolean[][] boardcheck = new boolean [3][3];
+
+    for (int k=0; k<3; k++) {
+      for (int l=0; l<3; l++){
+        if(boardcheck[k][l]){
+          count++;
+        }
+      }
+      if (count == 3){
+        TextIO.put("you win!");
+        break;
+      } else {count = 0;}
+    }
+
+    for (int k=0; k<3; k++) {
+      for (int l=0; l<3; l++){
+        if(boardcheck[l][k]){
+          count++;
+        }
+      }
+      if (count == 3){
+        TextIO.put("you win!");
+        break;
+      } else {count = 0;}
+    }
+
+
+    for (int l=0; l<3; l++){
+      if(boardcheck[l][l]){
+        count++;
+      }
+    }
+    if (count == 3){
+      TextIO.put("you win!");
+    } else {count = 0;}
+
+    for (int l=0; l<3; l++){
+      if(boardcheck[l][2-l]){
+        count++;
+      }
+    }
+    if (count == 3){
+      TextIO.put("you win!");
+    } else {count = 0;}
+
+
+
+  }
+
+}
