@@ -1,0 +1,187 @@
+//this version is refactored
+public class tttV6{
+
+  static String[][] board = new String [3][3];
+
+  public static void main(String[] args){
+    int x;
+    int y;
+    int heqi=0;
+    do{
+      TextIO.put("next move for X");
+      TextIO.put("\nx-axis:");
+      x = TextIO.getlnInt();
+      TextIO.put("\ny-axis:");
+      y = TextIO.getlnInt();
+      board[y][x] = "X";
+
+      heqi++;
+
+      if (!check()) {break;}
+      if (heqi==9) {TextIO.put("Draw game!"); break;} //this means that the board is full if there is no three in a row, but every spot is taken
+                                                      //which == 9 because there is only 9 spots on the board
+
+      for (int i=0;i<3;i++) {
+        for (int j=0; j<3; j++){
+          TextIO.put(" "+board[i][j]);
+        }
+        TextIO.putf("%n");
+      }
+      heqi++;
+    } while (check());
+  }
+
+  public static void printBoard(){
+    for (int i=0;i<3;i++) {
+      for (int j=0; j<3; j++){
+        TextIO.put(" "+board[i][j]);
+      }
+      TextIO.putf("%n");
+    }
+    for (int i=0;i<3;i++) {
+        for (int j=0; j<3; j++){
+          TextIO.put(" "+board[i][j]);
+        }
+        TextIO.putf("%n");
+      }
+  }
+
+  public static String playOstep(){
+    TextIO.put("next move for O");
+      TextIO.put("\nx-axis:");
+      x = TextIO.getlnInt();
+      TextIO.put("\ny-axis:");
+      y = TextIO.getlnInt();
+      checkTaken();
+      board[y][x] = "O";
+  }
+
+  public static boolean checkOWins(){
+    boardcheck[A][B]=check03();
+  if(boardcheck[A][B].equals(false)){
+    count=0;
+  }
+
+    for ( int A = 0; A<3; A++){
+      for ( int B = 0; B<3; B++) {
+
+        boardcheck[A][B]=false;
+
+      }
+    }
+
+    for ( int A = 0; A<3; A++){
+      for (int B = 0; B<3; B++) {
+        if (board[A][B].equals("O")){
+          boardcheck[A][B]=true;
+        }
+      }
+    }
+
+    for ( int k=0; k<3; k++) {
+      for (int  l=0; l<3; l++){
+        if(boardcheck[k][l]){
+          count++;
+        }
+      }
+      checkO3();
+
+    for ( int k=0; k<3; k++) {
+      for (int l=0; l<3; l++){
+        if(boardcheck[l][k]){
+          count++;
+        }
+      }
+      checkO3();
+
+
+    for ( int l=0; l<3; l++){
+      if(boardcheck[l][l]){
+        count++;
+      }
+    }
+    check03();
+
+    for (int l=0; l<3; l++){
+      if(boardcheck[l][2-l]){
+        count++;
+      }
+    } 
+      checkO3();
+    }
+    return true;
+  }
+  }
+
+  public static boolean checkO3(){
+  if (count == 3){
+        TextIO.put("O wins!");
+        return false;
+
+      } else {return false;}
+    }
+}
+
+  public static boolean check(){
+    int count = 0;
+    boolean[][] boardcheck = new boolean [3][3];
+
+
+    for (int A = 0; A<3; A++){
+      for (int B = 0; B<3; B++) {
+        if (board[A][B].equals("X")) {
+          boardcheck[A][B]=true;
+        }
+      }
+    }
+
+
+    for (int k=0; k<3; k++) {
+      for (int l=0; l<3; l++){
+        if(boardcheck[k][l]){
+          count++;
+        }
+      }
+      if (count == 3){
+        TextIO.put("X wins!");
+        return false;
+
+      } else {count = 0;}
+    }
+
+    for (int k=0; k<3; k++) {
+      for (int l=0; l<3; l++){
+        if(boardcheck[l][k]){
+          count++;
+        }
+      }
+      if (count == 3){
+        TextIO.put("X wins!");
+        return false;
+
+      } else {count = 0;}
+    }
+
+
+    for (int l=0; l<3; l++){
+      if(boardcheck[l][l]){
+        count++;
+      }
+    }
+    if (count == 3){
+      TextIO.put("X wins!");
+      return false;
+    } else {count = 0;}
+
+    for (int l=0; l<3; l++){
+      if(boardcheck[l][2-l]){
+        count++;
+      }
+    }
+    if (count == 3){
+      TextIO.put("X wins!");
+      return false;
+    } else {count = 0;}
+
+  } 
+}
