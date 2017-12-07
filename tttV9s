@@ -1,0 +1,210 @@
+import java.util.*;
+/**
+    *The main class creaates an array, sets that there are 8 total posssible
+    *ways to win. Checks to soo who goes first, and has the the computer play as well.
+    *it also checks to see if the gameproduces a draw game as well
+*/
+	public class tttV9s {
+		public static final int WAY= 8;//there are 8 possible ways of win
+		public static void main (String [] args) {
+			TextIO.putf("Let's play Tic Tac Toe!%n");
+			do {
+				char[][] game = new char[3][3];// create the array
+        		for (int i = 0; i < 3; i++) {
+            		for (int j = 0; j < 3; j++) {
+                		game[i][j] = ' ';
+            		}
+        		}
+				int steps = 0;
+				boolean test = gofirst();//ask user who goes first
+				boolean finish = false;
+				while (!finish &&  steps< 3 * 3) {
+                	steps++;// each time steps goes up
+                	if (test) {
+                    	userStep(game);// a static method to find user's input
+                	} else {
+                    	finish = computerStep(game);// computer's term to play
+                	}
+               		test = !test;//make while loop end
+                	printBoard(game);// print out the game
+            	}
+            	if (steps == 3 * 3) {// if all the positions on the board is taken, the game is a draw game
+                	TextIO.putf("It's a draw game!%n");
+            	}
+            	TextIO.putf("%n");
+        	}
+					 while (playAgain());
+    	}
+/**
+    *Checks to see who will go first
+    *@return    whethere or not the user or the computer will go first
+*/
+		public static boolean gofirst() {
+        	TextIO.putf("Do you want to go first?%n");
+        	boolean answer=TextIO.getlnBoolean();
+					return answer;
+        }
+/**
+    *Asks the user for where they want to play. Checks to make sure it's in range
+    *and that the user did not take a place that is already taken
+    *
+    *@param game     the char[][] to set where "x" goes in the tictactoe game
+    *                where it is the user's term to play
+*/
+    	public static void userStep(char[][] game) {
+        	boolean result = false;
+        	int row = 0;
+        	int col = 0;
+
+        	while (!result) {
+            	TextIO.putf("What is the row number(from 1 to 3)? ");
+            	row = TextIO.getlnInt() - 1;
+            	TextIO.putf("What is the column number(from 1 to 3)? ");
+            	col = TextIO.getlnInt() - 1;
+            	if (row < 0 || row >= 3 || col < 0 || col >= 3) {
+            	// make sure the input is in the correct range
+                	TextIO.putf("The answer must be between 1 and 3%n");
+            	} else if (game[row][col] != ' ') {
+                	TextIO.putf("That space is already taken%n");// check if the
+                	//space has already been taken
+            	} else {
+                	result = true;//if the input is available, the result will become true,
+                	// and while loop will stop
+            	}
+        	}
+        	game[row][col] = 'X';
+    	}//
+
+
+/**
+		*the computer plays the steps.
+		*calculate the best next steps.
+		*check if anyone wins.
+		*@param game     the char[][] to set where "O" goes in the tictactoe game
+        *                where it is the computer's term to play
+		*@return         true if computer wins
+		*@return         false if nobody wins
+*/
+public static boolean computerStep(char[][] game) {
+		int bestWin = 0;
+		char[] temp = new char[3];// create a temporary game
+		int free = -1;
+		int bestRow = -1;
+		int bestCol = -1;
+		for (int i = 0; i < WAY; i++) {//prints out array game in the temp array
+				for (int j = 0; j < 3; j++) {
+						if (i < 3) {
+								temp[j] = game[i][j];
+						} else if (i < 6) {
+								temp[j] = game[j][i - 3];
+						} else if (i == 6) {
+							temp[j] = game[j][j];
+						} else {
+							temp[j] = game[j][3 - 1 - j];
+					}
+					 if (temp[j] == ' ') {
+								free = j;
+						 }
+				}
+				int priority = testStep(temp);// see what step is possible
+				if (priority > bestWin) {
+						bestWin = priority;
+						if (i < 3) {// when step is within 3
+							bestRow = i;
+						} else {
+								bestRow = free;
+						}
+						if (i < 3 || i == 6) {
+								bestCol = free;
+						} else if (i < 6) {
+								bestCol = i - 3;//find the best column
+						} else {
+							bestCol = 3 + 1 - free;
+						}
+				}
+		}
+
+			if (bestWin >= 1 && bestWin <= 3) {
+				if (game[1][1]==' '){
+					game[1][1]='O';
+					TextIO.putf("I move to (2, 2)%n");
+				}else{
+					TextIO.putf("I move to (%d, %d )%n",(bestRow + 1), (bestCol + 1));
+					game[bestRow][bestCol] = 'O';
+			}}
+
+			if (bestWin == 0) { //check the result given back from testStep
+					return true;
+			} else if (bestWin == 3) {
+					TextIO.putf("I win!%n");
+					return true;
+			} else {
+					return false;
+			}
+	}
+	/**
+	    *Checks to see how many in a row there are for x's and o's.
+	    *
+	    *@param 2      checks to see how many x's or o's in a row, and if there is an x or an o in a row
+	    *              it will increment either the user count(youcount) or computer count(icount)
+	    *@return 0     this means that the row is mixed, with no x's or o's next to each other
+	    *@return 2     this means that there is 2-in-a-row for the user
+	    *@return 3     this means that there is 2-in-a-row for the computer
+	    *@return 4     this means there is 3-in-a-row for the user
+	    *@return 1     this means there is x and o are all in different rows
+	    *
+	*/
+     	public static int testStep(char[] row) {
+        	int youCount = 0;
+        	int iCount = 0;
+        	for (int i = 0; i < 3; i++) {
+            	if (row[i] == 'X') {
+                	youCount++;
+            	} else if (row[i] == 'O') {
+                	iCount++;
+            	}
+        	}
+        	if (youCount > 0 && iCount > 0) {
+            	return 0;
+        	} if (youCount == 2) {
+            	return 2;
+        	} else if (iCount == 2) {
+            	return 3;
+        	} else if (youCount == 3) {
+            	return 4;
+        	} else {
+            	return 1;
+        	}
+    	}//
+/**
+    * This prints out the game graph
+    *@param    game a 2D array that prints out the board
+*/
+	 	public static void printBoard(char[][] game) {
+        	for (int i = 0; i <= 4 * 3; i++) {
+            	TextIO.put("-");
+        	}
+        	TextIO.putf("%n");
+        	for (int j = 0; j < 3; j++) {
+            	for (int k = 0; k < 3; k++) {
+                	TextIO.putf("| " + game[j][k] + " ");
+            	}
+            	TextIO.putf("|%n");
+            	for (int l = 0; l <= 4 * 3; l++) {
+            		TextIO.put("-");
+        		}
+        		TextIO.putf("%n");
+        	}
+        	TextIO.putf("%n");
+    	}
+/**
+    *Sees if the user wants to play again
+    *@return    if the user's answer is true, then play again
+*/
+    	public static boolean playAgain() {
+
+        	TextIO.putf("Do you want to play again?");
+        	boolean answer=TextIO.getlnBoolean();
+					return answer;
+        		}
+    	}
